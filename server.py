@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ.get("MONGOLAB_URI", None)
 mongo = PyMongo(app)
 
+
 @app.route("/")
 def getUsers():
     output = []
@@ -16,6 +17,7 @@ def getUsers():
     for user in users:
         output.append({"name": user["name"], "lastname": user["lastname"], "sex": user["sex"]})
     return jsonify(output)
+
 
 @app.route("/", methods=['POST'])
 def addUser():
