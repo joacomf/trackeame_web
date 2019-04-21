@@ -13,16 +13,16 @@ def init(uri=None, db="trackeame"):
     app.database = mongo[db]
 
 
-    @app.route("/")
-    def getUsers():
+    @app.route("/api/users")
+    def get_users():
         output = []
         users = app.database.users.find()
         for user in users:
             output.append({"name": user["name"], "lastname": user["lastname"], "sex": user["sex"]})
         return jsonify(output)
 
-    @app.route("/", methods=['POST'])
-    def addUser():
+    @app.route("/api/users", methods=['POST'])
+    def add_user():
         users = app.database.users
         name = request.json["name"]
         lastname = request.json["lastname"]

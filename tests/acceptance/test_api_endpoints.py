@@ -34,7 +34,7 @@ class TrackeameAPIEndpointsTests(unittest.TestCase):
         # sends HTTP GET request to the application
         # on the specified path
 
-        result = self.app.get('/')
+        result = self.app.get('/api/users')
 
         # assert the status code of the response
         self.assertEqual(result.status_code, 200)
@@ -43,7 +43,7 @@ class TrackeameAPIEndpointsTests(unittest.TestCase):
 
         self.database.users.insert_one({"name": "JOAN", "lastname": "LALLA", "sex": 'M'})
 
-        response = self.app.get('/').get_data(as_text=True)
+        response = self.app.get('/api/users').get_data(as_text=True)
 
         result = json.loads(response)
 
