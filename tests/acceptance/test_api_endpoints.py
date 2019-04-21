@@ -68,8 +68,8 @@ class TrackeameAPIEndpointsTests(unittest.TestCase):
         self.database.users.insert_one(usuario)
 
     def entonces_corroboro_que_el_unico_usuario_es_(self, usuario):
-        self.assertEqual('JOAN', self.contenido[0]['name'])
-        self.assertEqual('LALLA', self.contenido[0]['lastname'])
+        self.assertEqual(usuario['name'], self.contenido[0]['name'])
+        self.assertEqual(usuario['lastname'], self.contenido[0]['lastname'])
 
     def entonces_corroboro_que_el_status_es_OK(self):
         self.assertEqual(200, self.response.status_code)
