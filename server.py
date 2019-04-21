@@ -12,6 +12,9 @@ def init(uri=None, db="trackeame"):
     app.mongo = mongo
     app.database = mongo[db]
 
+    @app.route("/")
+    def root_page():
+        return "Trackeame"
 
     @app.route("/api/users")
     def get_users():
