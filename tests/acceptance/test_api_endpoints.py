@@ -9,9 +9,12 @@ class TrackeameAPIEndpointsTests(unittest.TestCase):
     database_url = 'mongodb://localhost:27017/test'
     database_name = 'test'
 
+    contenido = None
+    status = None
+    response = None
+
     @classmethod
     def setUpClass(self):
-        # creates a test client
         app = init(self.database_url, self.database_name)
 
         self.mongo = app.mongo
@@ -30,21 +33,43 @@ class TrackeameAPIEndpointsTests(unittest.TestCase):
     def tearDown(self):
         self.mongo.drop_database('test')
 
-    def test_si_voy_a_obtener_usuario_obtengo_reponse_OK(self):
-        # sends HTTP GET request to the application
-        # on the specified path
+        self.contenido = None
+        self.status = None
+        self.response = None
 
-        result = self.app.get('/api/users')
+    def test_si_voy_a_obtener_usuario_obtengo_status_OK(self):
+        self.cuando_voy_a_('/api/users')
 
-        # assert the status code of the response
-        self.assertEqual(result.status_code, 200)
+        self.entonces_corroboro_que_el_status_es_OK()
 
     def test_si_voy_a_obtener_usuario_obtengo_al_usuario_JOAN_guardado_previamente(self):
+        joan = {"name": "JOAN", "lastname": "LALLA", "sex": 'M'}
 
-        self.database.users.insert_one({"name": "JOAN", "lastname": "LALLA", "sex": 'M'})
+        self.dado_el_usuario_(joan)
 
-        response = self.app.get('/api/users').get_data(as_text=True)
+        self.cuando_voy_a_('/api/users').obtengo_lista_de_usuarios()
 
-        result = json.loads(response)
+        self.entonces_corroboro_que_el_unico_usuario_es_(joan)
 
-        self.assertEqual('JOAN', result[0]['name'])
+    def cuando_voy_a_(self, ruta=''):
+        self.response = self.app.get(ruta)
+
+        return self
+
+    def obtengo_contenido(self):
+        return self.response.get_data(as_text=True)
+
+    def obtengo_lista_de_usuarios(self):
+        self.contenido = json.loads(self.obtengo_contenido())
+
+        return self
+
+    def dado_el_usuario_(self, usuario):
+        self.database.users.insert_one(usuario)
+
+    def entonces_corroboro_que_el_unico_usuario_es_(self, usuario):
+        self.assertEqual('JOAN', self.contenido[0]['name'])
+        self.assertEqual('LALLA', self.contenido[0]['lastname'])
+
+    def entonces_corroboro_que_el_status_es_OK(self):
+        self.assertEqual(200, self.response.status_code)
