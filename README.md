@@ -1,5 +1,5 @@
-# API de Trackeame
-[![Build Status](https://travis-ci.org/joacomf/trackeame_web.svg?branch=master)](https://travis-ci.org/joacomf/trackeame_web)
+# API de Trackeame [![Build Status](https://travis-ci.org/joacomf/trackeame_web.svg?branch=master)](https://travis-ci.org/joacomf/trackeame_web)
+
 
 ## Instalar dependencias
 
