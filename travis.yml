@@ -1,0 +1,28 @@
+sudo: false
+
+services:
+  - docker
+  - mongodb
+
+env:
+  global:
+    - MONGODB_VERSION=4.0.9
+
+language: python
+
+before_install:
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-$MONGODB_VERSION.tgz
+  - tar xfz mongodb-linux-x86_64-$MONGODB_VERSION.tgz
+  - export PATH=`pwd`/mongodb-linux-x86_64-$MONGODB_VERSION/bin:$PATH
+  - mkdir -p data/db
+  - mongod --dbpath=data/db &
+  - sleep 3
+
+python:
+  - "3.6"
+
+install:
+  - pip install -r requirements.txt
+  
+script: 
+  - python -m pytest tests
