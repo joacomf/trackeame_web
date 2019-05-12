@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask import make_response
 from flask_pymongo import MongoClient
 
 
@@ -36,5 +37,22 @@ def init(uri=None, db="trackeame"):
         result = {"name": user["name"], "lastname": user["lastname"], "sex": user["sex"]}
 
         return jsonify(result)
+
+    @app.route("/api/locations", methods=['POST'])
+    def add_locations():
+        locations = app.database.locations
+        contenido = request.json["content"]
+        locations.insert({"contenido": contenido})
+        result = {"ok": 1}
+        return jsonify(result)
+
+    @app.route("/api/locations")
+    def get_locations():
+        output = []
+        locations = app.database.locations.find()
+        for location in locations:
+            print(location)
+            output.append({"location": location})
+        return jsonify(output)
 
     return app
