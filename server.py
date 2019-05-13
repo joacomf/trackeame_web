@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask import jsonify
-from flask import request
+from flask import request, abort
 from flask_pymongo import MongoClient
 
 
@@ -40,9 +40,15 @@ def init(uri=None, db="trackeame"):
     @app.route("/api/locations", methods=['POST'])
     def add_locations():
         locations = app.database.locations
-        contenido = request.json["content"]
-        locations.insert({"content": contenido})
+
+        try:
+            contenido = request.json["content"]
+            locations.insert_one({"content": contenido})
+        except KeyError:
+            abort(403)
+
         result = {"ok": 1}
+
         return jsonify(result)
 
     @app.route("/api/locations")
