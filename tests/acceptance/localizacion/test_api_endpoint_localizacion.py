@@ -28,16 +28,21 @@ class LocalizacionAceptacionTest(LocalizacionSteps):
 
         self.limpiar_escenarios()
 
+    def test_si_voy_a_guardar_localizaciones_con_5_localizaciones_se_guardan_correctamente(self):
+        json = {
+                "usuario": "test",
+                "posiciones": "$GPRMC,133603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39710,S,05841.74549,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39715,S,05841.74552,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39719,S,05841.74558,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39722,S,05841.74561,W,0.323,,170519,,,A*72\n"
+                }
+
+        self.cuando_guardo_en('/api/locations', json)
+
+        self.cuando_voy_a_('/api/locations').obtengo_lista_de_posiciones()
+
+        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.03995033333333}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.03995166666667}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.0399525}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.03995316666666}}, {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.03995366666667}}]
+
+        self.entonces_corroboro_que_las_posiciones_son(respuesta_esperada)
+
     def test_si_voy_a_guardar_localizaciones_con_formato_erroneo_obtengo_403(self):
         self.cuando_guardo_en('/api/locations', {"clave_invalida": "Hola\nComo\nEstas?"})
 
         self.entonces_corroboro_que_el_status_es_BAD_REQUEST()
-
-"""     def test_si_voy_a_obtener_usuario_obtengo_al_usuario_JOAN_guardado_previamente(self):
-        joan = {"name": "JOAN", "lastname": "LALLA", "sex": 'M'}
-
-        self.dado_el_usuario_(joan)
-
-        self.cuando_voy_a_('/api/users').obtengo_lista_de_usuarios()
-
-        self.entonces_corroboro_que_el_unico_usuario_es_(joan) """

@@ -4,6 +4,7 @@ from flask import jsonify
 from flask import request, abort
 from flask_pymongo import MongoClient
 
+from datetime import datetime
 
 def init(uri=None, db="trackeame"):
     app = Flask(__name__)
@@ -54,19 +55,31 @@ def init(uri=None, db="trackeame"):
     def add_locations():
         locations = app.database.locations
 
+        cuadrantes = {"N": 1, "S":-1, "W":-1, "E": 1}
+
         try:
             posiciones = request.json["posiciones"]
             posiciones_parseadas = []
 
             for posicion in posiciones.split("\n"):
-                posicion_parseada = posicion.split(",")
+                if posicion is not '':
+                    nueva_posicion = {}
 
-                if len(posicion_parseada) == 2:
-                    posicion_parseada[0] = float(posicion_parseada[0].replace(" ", ""))
-                    posicion_parseada[1] = float(posicion_parseada[1].replace(" ", ""))
-                    posiciones_parseadas.append({"posicion": posicion_parseada})
+                    tipo, hora_gcm, validez, latitud, polo, longitud, hemisferio, dato1, dato2, fecha, dato3, dato4, dato5 = posicion.split(",")
+
+                    tiempo_hora = datetime( int(fecha[4:6]), int(fecha[2:4]), int(fecha[0:2]), int(hora_gcm[0:2]), int(hora_gcm[2:4]), int(hora_gcm[4:6]))
+
+                    nueva_posicion['timestamp'] = datetime.timestamp(tiempo_hora)
+
+                    print(int(latitud[0:2]), float(latitud[2:9])/60)
+                    print(int(longitud[0:3]), float(longitud[3:10])/60)
+                    nueva_posicion['latitud'] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
+                    nueva_posicion['longitud'] = (int(longitud[0:3]) + (float(latitud[3:10]) / 60)) * cuadrantes[hemisferio]
+
+                    posiciones_parseadas.append(nueva_posicion)
 
             locations.insert_many(posiciones_parseadas)
+
         except KeyError:
             abort(403)
 
@@ -79,7 +92,7 @@ def init(uri=None, db="trackeame"):
         output = []
         locations = app.database.locations.find()
         for location in locations:
-            output.append({"posicion": location["posicion"]})
+            output.append({"posicion": {"latitud": location["latitud"], "longitud": location["longitud"]}})
         return jsonify(output)
 
     return app
