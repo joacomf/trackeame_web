@@ -9,7 +9,7 @@
 ## Ejecutar servidor
 ```bash
     pipenv shell
-    FLASK_APP=server:init
+    export FLASK_APP=server:init
     flask run
 ```
 ## Correr tests
