@@ -45,4 +45,4 @@ class TrackeameFrontPageTests(unittest.TestCase):
         return self.response.get_data(as_text=True)
 
     def y_que_se_ve_el_texto_(self, texto):
-        self.assertEqual(texto, self.obtengo_contenido())
+        self.assertIn(texto, self.obtengo_contenido())
