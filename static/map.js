@@ -1,5 +1,5 @@
 $(function () {
-    var mymap = L.map('mapid').setView([-34.604878, -58.563051], 26);
+    var mymap = L.map('mapid').setView([-34.53995, -58.695757167], 26);
     var latlngs = new Array();
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -14,15 +14,8 @@ $(function () {
         $.post({
             url: "api/locations",
             data: JSON.stringify({
-                "posiciones": "-34.605851,-58.563338\n" +
-                        "-34.605847,-58.563751\n" +
-                        "-34.605473,-58.563864\n" +
-                        "-34.605079,-58.563845\n" +
-                        "-34.604997,-58.563850\n" +
-                        "-34.604959,-58.563837\n" +
-                        "-34.604880,-58.563710\n" +
-                        "-34.604887,-58.563461\n" +
-                        "-34.604878,-58.563051\n"
+                "usuario": "test",
+                "posiciones": "$GPRMC,133603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39710,S,05841.74549,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39715,S,05841.74552,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39719,S,05841.74558,W,0.323,,170519,,,A*72\n$GPRMC,133603.00,A,3432.39722,S,05841.74561,W,0.323,,170519,,,A*72\n"
             }),
             dataType: "json",
             contentType: "application/json"
@@ -30,16 +23,18 @@ $(function () {
         ).done(function () {
             console.log("Posiciones almacenadas satisfactoriamente.");
 
-            $.get("api/locations").done(function (posiciones) {
+            $.get("api/locations").done(function (muestras) {
 
-                for (i = 0; i < posiciones.length - 1; i++) {
-                    var posicion = posiciones[i].posicion;
-                    posicion[0] = parseFloat(posicion[0]);
-                    posicion[1] = parseFloat(posicion[1]);
-                    latlngs.push(posicion);
+                for (i = 0; i < muestras.length - 1; i++) {
+                    var posicion = muestras[i].posicion;
+                    var latlng = [];
+                    latlng[0] = parseFloat(posicion.latitud);
+                    latlng[1] = parseFloat(posicion.longitud);
+                    latlngs.push(latlng);
+                    console.log(latlng);
                 }
                 
-                var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(mymap);
+                L.polyline(latlngs, {color: 'blue'}).addTo(mymap);
 
             }).fail(function (mensaje) {
                 console.log("Error al obtener posiciones.");
