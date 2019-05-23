@@ -38,7 +38,7 @@ class LocalizacionAceptacionTest(LocalizacionSteps):
 
         self.cuando_voy_a_('/api/locations').obtengo_lista_de_posiciones()
 
-        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.03995033333333}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.03995166666667}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.0399525}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.03995316666666}}, {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.03995366666667}}]
+        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575666666667}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333}}, {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.69576}}]
 
         self.entonces_corroboro_que_las_posiciones_son(respuesta_esperada)
 

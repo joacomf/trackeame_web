@@ -74,7 +74,7 @@ def init(uri=None, db="trackeame"):
                         print(int(latitud[0:2]), float(latitud[2:9])/60)
                         print(int(longitud[0:3]), float(longitud[3:10])/60)
                         nueva_posicion['latitud'] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
-                        nueva_posicion['longitud'] = (int(longitud[0:3]) + (float(latitud[3:10]) / 60)) * cuadrantes[hemisferio]
+                        nueva_posicion['longitud'] = (int(longitud[0:3]) + (float(longitud[3:10]) / 60)) * cuadrantes[hemisferio]
 
                         posiciones_parseadas.append(nueva_posicion)
 
