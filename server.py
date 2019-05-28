@@ -12,7 +12,7 @@ def init(uri=None, db="trackeame"):
     mongo = MongoClient(app.config["MONGO_URI"])
     app.mongo = mongo
     print(db)
-    app.database = mongo[db]
+    app.database = mongo["trackeame"]
 
     @app.route("/")
     def root_page():
