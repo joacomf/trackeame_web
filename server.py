@@ -9,7 +9,7 @@ from datetime import datetime
 def init(uri=None, db="trackeame"):
     app = Flask(__name__)
     app.config["MONGO_URI"] = os.environ.get("MONGOLAB_URI", uri)
-    mongo = MongoClient(uri)
+    mongo = MongoClient(app.config["MONGO_URI"])
     app.mongo = mongo
     app.database = mongo[db]
 
