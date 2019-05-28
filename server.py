@@ -6,13 +6,11 @@ from flask_pymongo import MongoClient
 
 from datetime import datetime
 
-app = Flask(__name__)
-
 def init(uri=None, db="trackeame"):
+    app = Flask(__name__)
     app.config["MONGO_URI"] = os.environ.get("MONGOLAB_URI", uri)
     mongo = MongoClient(app.config["MONGO_URI"])
     app.mongo = mongo
-    print(db)
     app.database = mongo["trackeame"]
 
     @app.route("/")
