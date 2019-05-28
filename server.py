@@ -11,6 +11,7 @@ def init(uri=None, db="trackeame"):
     app.config["MONGO_URI"] = os.environ.get("MONGOLAB_URI", uri)
     mongo = MongoClient(app.config["MONGO_URI"])
     app.mongo = mongo
+    print(db)
     app.database = mongo[db]
 
     @app.route("/")
