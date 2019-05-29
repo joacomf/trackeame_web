@@ -64,19 +64,20 @@ def init(uri=None, db="trackeame"):
             for posicion in posiciones.split("\n"):
                 if posicion is not '':
                     nueva_posicion = {}
+                    print(posicion)
+                    try:
+                        tipo, hora_gcm, validez, latitud, polo, longitud, hemisferio, dato1, dato2, fecha, dato3, dato4, dato5 = posicion.split(",")
 
-                    tipo, hora_gcm, validez, latitud, polo, longitud, hemisferio, dato1, dato2, fecha, dato3, dato4, dato5 = posicion.split(",")
-                    if latitud is not '' and longitud is not '':
-                        tiempo_hora = datetime( int(fecha[4:6]), int(fecha[2:4]), int(fecha[0:2]), int(hora_gcm[0:2]), int(hora_gcm[2:4]), int(hora_gcm[4:6]))
+                        if latitud is not '' and longitud is not '':
+                            tiempo_hora = datetime( int(fecha[4:6]), int(fecha[2:4]), int(fecha[0:2]), int(hora_gcm[0:2]), int(hora_gcm[2:4]), int(hora_gcm[4:6]))
 
-                        nueva_posicion['timestamp'] = datetime.timestamp(tiempo_hora)
+                            nueva_posicion['timestamp'] = datetime.timestamp(tiempo_hora)
+                            nueva_posicion['latitud'] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
+                            nueva_posicion['longitud'] = (int(longitud[0:3]) + (float(longitud[3:10]) / 60)) * cuadrantes[hemisferio]
 
-                        print(int(latitud[0:2]), float(latitud[2:9])/60)
-                        print(int(longitud[0:3]), float(longitud[3:10])/60)
-                        nueva_posicion['latitud'] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
-                        nueva_posicion['longitud'] = (int(longitud[0:3]) + (float(longitud[3:10]) / 60)) * cuadrantes[hemisferio]
-
-                        posiciones_parseadas.append(nueva_posicion)
+                            posiciones_parseadas.append(nueva_posicion)
+                    except Exception:
+                        pass
 
             if len(posiciones_parseadas) > 0:
                 locations.insert_many(posiciones_parseadas)
