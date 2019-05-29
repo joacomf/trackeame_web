@@ -20,5 +20,6 @@ function Mapa(latitudInicial, longitudInicial) {
 
     this.dibujarMarcas = function () {
         L.polyline(posicionesMarcadas, {color: 'blue'}).addTo(mapa);
+        mapa.panTo(posicionesMarcadas[0]);
     }
 }
