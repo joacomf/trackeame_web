@@ -38,11 +38,11 @@ class LocalizacionAceptacionTest(LocalizacionSteps):
 
         self.cuando_voy_a_('/api/locations').obtengo_lista_de_posiciones()
 
-        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'esParada': False}},
-                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575666666667, 'esParada': False}},
-                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333, 'esParada': False}},
-                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333, 'esParada': False}},
-                              {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.69576, 'esParada': False}}]
+        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'tiempoDeParada': 0}},
+                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575666666667, 'tiempoDeParada': 0}},
+                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333, 'tiempoDeParada': 0}},
+                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333, 'tiempoDeParada': 0}},
+                              {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.69576, 'tiempoDeParada': 0}}]
 
         self.entonces_corroboro_que_las_posiciones_son(respuesta_esperada)
 
@@ -55,12 +55,12 @@ class LocalizacionAceptacionTest(LocalizacionSteps):
         json_de_posiciones_con_parada = {
             "usuario": "test",
             "posiciones": "$GPRMC,133603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n" +
-                          "$PARADA,133603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n"
+                          "$PARADA,134603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n"
         }
         self.cuando_guardo_en('/api/locations', json_de_posiciones_con_parada)
         self.cuando_voy_a_('/api/locations').obtengo_lista_de_posiciones()
 
-        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'esParada': False}},
-                              {'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'esParada': True}}]
+        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'tiempoDeParada': 600}},
+                              {'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'tiempoDeParada': 0}}]
 
         self.entonces_corroboro_que_las_posiciones_son(respuesta_esperada)

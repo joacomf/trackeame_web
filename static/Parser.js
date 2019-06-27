@@ -5,10 +5,10 @@ function Parser() {
 
         for (i = 0; i < posiciones.length; i++) {
             var posicion = posiciones[i].posicion;
-            var posicionParseada = [];
-            posicionParseada[0] = parseFloat(posicion.latitud);
-            posicionParseada[1] = parseFloat(posicion.longitud);
-            posicionParseada[2] = posicion.esParada;
+            latitud = parseFloat(posicion.latitud);
+            longitud = parseFloat(posicion.longitud);
+            tiempoDeParada = parseFloat(posicion.tiempoDeParada);
+            posicionParseada = new Posicion(latitud, longitud, tiempoDeParada);
             posicionesParseadas.push(posicionParseada);
         }
 

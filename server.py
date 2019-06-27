@@ -60,6 +60,7 @@ def init(uri=None, db="trackeame"):
         try:
             posiciones = request.json["posiciones"]
             posiciones_parseadas = []
+            ultima_posicion = None
 
             for posicion in posiciones.split("\n"):
                 if posicion is not '':
@@ -74,9 +75,13 @@ def init(uri=None, db="trackeame"):
                             nueva_posicion["timestamp"] = datetime.timestamp(tiempo_hora)
                             nueva_posicion["latitud"] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
                             nueva_posicion["longitud"] = (int(longitud[0:3]) + (float(longitud[3:10]) / 60)) * cuadrantes[hemisferio]
-                            nueva_posicion["es_parada"] = tipo == '$PARADA'
+                            nueva_posicion["tiempo_de_parada"] = 0
+
+                            if tipo == "$PARADA" and ultima_posicion is not None:
+                                ultima_posicion["tiempo_de_parada"] = nueva_posicion["timestamp"] - ultima_posicion["timestamp"]
 
                             posiciones_parseadas.append(nueva_posicion)
+                            ultima_posicion = nueva_posicion
                     except Exception:
                         pass
 
@@ -96,9 +101,10 @@ def init(uri=None, db="trackeame"):
         locations = app.database.locations.find()
         for location in locations:
             output.append({"posicion": {
+                "timestamp": location["timestamp"],
                 "latitud": location["latitud"],
                 "longitud": location["longitud"],
-                "esParada": location.get("es_parada", False)
+                "tiempoDeParada": location["tiempo_de_parada"]
             }})
         return jsonify(output)
 

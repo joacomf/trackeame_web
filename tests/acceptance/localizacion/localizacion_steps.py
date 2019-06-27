@@ -40,7 +40,7 @@ class LocalizacionSteps(unittest.TestCase):
             print("Corroboro que las posiciones es", posicion['posicion'])
             self.assertEqual(posicion['posicion']['latitud'], posicion_de_contenido['posicion']['latitud'])
             self.assertEqual(posicion['posicion']['longitud'], posicion_de_contenido['posicion']['longitud'])
-            self.assertEqual(posicion['posicion']['esParada'], posicion_de_contenido['posicion']['esParada'])
+            self.assertEqual(posicion['posicion']['tiempoDeParada'], posicion_de_contenido['posicion']['tiempoDeParada'])
 
 
     def limpiar_escenarios(self):
