@@ -71,9 +71,10 @@ def init(uri=None, db="trackeame"):
                         if latitud is not '' and longitud is not '':
                             tiempo_hora = datetime( int(fecha[4:6]), int(fecha[2:4]), int(fecha[0:2]), int(hora_gcm[0:2]), int(hora_gcm[2:4]), int(hora_gcm[4:6]))
 
-                            nueva_posicion['timestamp'] = datetime.timestamp(tiempo_hora)
-                            nueva_posicion['latitud'] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
-                            nueva_posicion['longitud'] = (int(longitud[0:3]) + (float(longitud[3:10]) / 60)) * cuadrantes[hemisferio]
+                            nueva_posicion["timestamp"] = datetime.timestamp(tiempo_hora)
+                            nueva_posicion["latitud"] = (int(latitud[0:2]) + (float(latitud[2:9]) / 60)) * cuadrantes[polo]
+                            nueva_posicion["longitud"] = (int(longitud[0:3]) + (float(longitud[3:10]) / 60)) * cuadrantes[hemisferio]
+                            nueva_posicion["es_parada"] = tipo == '$PARADA'
 
                             posiciones_parseadas.append(nueva_posicion)
                     except Exception:
@@ -94,7 +95,11 @@ def init(uri=None, db="trackeame"):
         output = []
         locations = app.database.locations.find()
         for location in locations:
-            output.append({"posicion": {"latitud": location["latitud"], "longitud": location["longitud"]}})
+            output.append({"posicion": {
+                "latitud": location["latitud"],
+                "longitud": location["longitud"],
+                "esParada": location.get("es_parada", False)
+            }})
         return jsonify(output)
 
     return app

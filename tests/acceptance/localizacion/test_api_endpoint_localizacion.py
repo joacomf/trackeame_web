@@ -38,7 +38,11 @@ class LocalizacionAceptacionTest(LocalizacionSteps):
 
         self.cuando_voy_a_('/api/locations').obtengo_lista_de_posiciones()
 
-        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575666666667}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333}}, {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333}}, {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.69576}}]
+        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'esParada': False}},
+                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575666666667, 'esParada': False}},
+                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333, 'esParada': False}},
+                              {'posicion': {'latitud': -34.53995166666667, 'longitud': -58.69575833333333, 'esParada': False}},
+                              {'posicion': {'latitud': -34.53995333333334, 'longitud': -58.69576, 'esParada': False}}]
 
         self.entonces_corroboro_que_las_posiciones_son(respuesta_esperada)
 
@@ -46,3 +50,17 @@ class LocalizacionAceptacionTest(LocalizacionSteps):
         self.cuando_guardo_en('/api/locations', {"clave_invalida": "Hola\nComo\nEstas?"})
 
         self.entonces_corroboro_que_el_status_es_BAD_REQUEST()
+
+    def test_si_almaceno_una_parada_en_una_posicion_se_almacena_correctamente(self):
+        json_de_posiciones_con_parada = {
+            "usuario": "test",
+            "posiciones": "$GPRMC,133603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n" +
+                          "$PARADA,133603.00,A,3432.39702,S,05841.74543,W,0.323,,170519,,,A*72\n"
+        }
+        self.cuando_guardo_en('/api/locations', json_de_posiciones_con_parada)
+        self.cuando_voy_a_('/api/locations').obtengo_lista_de_posiciones()
+
+        respuesta_esperada = [{'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'esParada': False}},
+                              {'posicion': {'latitud': -34.53995, 'longitud': -58.69575666666667, 'esParada': True}}]
+
+        self.entonces_corroboro_que_las_posiciones_son(respuesta_esperada)

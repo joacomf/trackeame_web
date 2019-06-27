@@ -33,9 +33,14 @@ class LocalizacionSteps(unittest.TestCase):
         return self
 
     def entonces_corroboro_que_las_posiciones_son(self, posiciones):
-        print("Corroboro que las posiciones es", posiciones[0]['posicion'])
-        self.assertEqual(posiciones[0]['posicion']['latitud'], self.contenido[0]['posicion']['latitud'])
-        self.assertEqual(posiciones[0]['posicion']['longitud'], self.contenido[0]['posicion']['longitud'])
+
+        for i in range(len(posiciones)):
+            posicion = posiciones[i]
+            posicion_de_contenido = self.contenido[i]
+            print("Corroboro que las posiciones es", posicion['posicion'])
+            self.assertEqual(posicion['posicion']['latitud'], posicion_de_contenido['posicion']['latitud'])
+            self.assertEqual(posicion['posicion']['longitud'], posicion_de_contenido['posicion']['longitud'])
+            self.assertEqual(posicion['posicion']['esParada'], posicion_de_contenido['posicion']['esParada'])
 
 
     def limpiar_escenarios(self):
